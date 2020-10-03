@@ -88,4 +88,19 @@ class BookRouter {
 								.and(route(GET("/books").and(accept(MediaType.APPLICATION_XML, MediaType.TEXT_PLAIN)), req -> ok().body(br.findAll(), Book.class)))
 								.andRoute(GET("/books/{author}"), req -> ok().body(br.findByAuthor(req.pathVariable("author")), Book.class)));
 	}
+
+	@Bean
+	@RouterOperations({
+			@RouterOperation(path = "/greeter3/books", produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE }, beanClass = BookRepository.class, beanMethod = "findAll"),
+			@RouterOperation(path = "/greeter3/books", produces = { MediaType.TEXT_PLAIN_VALUE, MediaType.APPLICATION_XML_VALUE }, beanClass = BookRepository.class, beanMethod = "findAll"),
+			@RouterOperation(path = "/greeter3/books/{author}", beanClass = BookRepository.class, beanMethod = "findByAuthor",
+					operation = @Operation(operationId = "findByAuthor"
+							, parameters = { @Parameter(in = ParameterIn.PATH, name = "author") })) })
+	RouterFunction<?> routes4(BookRepository br) {
+		return
+				nest(path("/greeter3"),
+						route(GET("/books").and(accept(MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML)), req -> ok().body(br.findAll(), Book.class))
+								.and(route(GET("/books").and(accept(MediaType.APPLICATION_XML, MediaType.TEXT_PLAIN)), req -> ok().body(br.findAll(), Book.class)))
+								.andRoute(GET("/books/{author}"), req -> ok().body(br.findByAuthor(req.pathVariable("author")), Book.class)));
+	}
 }

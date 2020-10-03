@@ -91,12 +91,13 @@ public class AbstractRouterFunctionVisitor {
 	 * @param pattern the pattern
 	 */
 	public void path(String pattern) {
-		if (routerFunctionData != null)
+		if (routerFunctionData != null) {
 			routerFunctionData.setPath(pattern);
-		else if (isAnd)
-			nestedAndPaths.add(pattern);
-		else if (isOr)
+		} else if (isOr) {
 			nestedOrPaths.add(pattern);
+		} else {
+			nestedAndPaths.add(pattern);
+		}
 	}
 
 	/**
